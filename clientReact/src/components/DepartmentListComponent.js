@@ -2,12 +2,15 @@ import React from "react";
 import { Card, CardHeader, CardBody, Table, Breadcrumb, BreadcrumbItem, Alert } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { Loading } from "./LoadingComponent";
-function RenderDeparment({ departments, isLoading, errMess }) {
-
+function RenderDeparment({ staffs, departments, isLoading, errMess }) {
+    
     const _departments = departments.map((department) => {
+        // Đếm số nhân viên cùng 1 department
+        const _staffs = staffs.staffs.filter(staff => staff.departmentId === department._id)
+        
         return (
             <div key={department.id} className="col-12 col-sm-6 col-lg-4 p-4">
-                <Link to={`/department/${department.id}`}>
+                <Link to={`/department/${department._id}`}>
                     <Card>
                         <CardHeader>{department.name}</CardHeader>
                         <CardBody>
@@ -15,7 +18,7 @@ function RenderDeparment({ departments, isLoading, errMess }) {
                                 <tbody>
                                     <tr>
                                         <th scope="row">Số lượng nhân viên</th>
-                                        <td>{department.numberOfStaff}</td>
+                                        <td>{_staffs.length}</td>
                                     </tr>
                                 </tbody>
                             </Table>
@@ -59,10 +62,12 @@ const DepartmentList = (props) => {
                 </Breadcrumb>
             </div>
 
-            <RenderDeparment isLoading={props.departmentsLoading} errMess={props.departmentsErrMess} departments={props.departments} />
+            <RenderDeparment isLoading={props.departmentsLoading} errMess={props.departmentsErrMess} departments={props.departments} staffs= {props.staffs} />
 
         </React.Fragment>
     );
 }
 
+
 export default DepartmentList;
+// export default connect(mapStateToProps)(DepartmentList);

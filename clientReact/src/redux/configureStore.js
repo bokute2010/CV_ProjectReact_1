@@ -13,8 +13,9 @@ export const ConfigureStore = () => {
             staffs: Staffs,
             departments: Departments,
             staffsSalary: StaffsSalary
+            // staffsSalary: StaffsSalary
         }),
-        applyMiddleware(thunk, logger)
+        applyMiddleware(thunk)
 
     );
     return store;

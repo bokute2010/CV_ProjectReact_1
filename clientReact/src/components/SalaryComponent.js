@@ -20,16 +20,16 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
                             <tbody>
                                 <tr>
                                     <th scope="row">Mã nhân viên</th>
-                                    <td>{staff.id}</td>
+                                    <td>{staff._id}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Hệ số lương</th>
                                     <td>{staff.salaryScale}</td>
                                 </tr>
-                                <tr>
+                                {/* <tr>
                                     <th scope="row">Giờ làm thêm</th>
                                     <td>{staff.overTime}</td>
-                                </tr>
+                                </tr> */}
                             </tbody>
                         </Table>
                     </CardBody>
@@ -39,7 +39,7 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
                                 <tr>
                                     <th scope="row">Lương</th>
                                     <td>
-                                        <i className="fa fa-money" aria-hidden="true"></i> {staff.salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {<sup>đ</sup>}
+                                        <i className="fa fa-money" aria-hidden="true"></i> {(staff.salaryScale * 3000000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {<sup>đ</sup>}
                                     </td>
                                 </tr>
                             </tbody>
@@ -103,7 +103,7 @@ const Salary = (props) => {
                 </Breadcrumb>
             </div>
 
-            <div className="row" style={{ padding: '0 3vw' }}>
+            {/* <div className="row" style={{ padding: '0 3vw' }}>
                 <Dropdown className="ml-auto" isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle color='info' caret>
                         Mã nhân viên
@@ -114,7 +114,8 @@ const Salary = (props) => {
                         <DropdownItem onClick={() => <RenderSalaryTable staffs={props.staffsSalary.sort((a, b) => { return parseInt(b.id) - parseInt(a.id); })} />}>Giảm dần</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-            </div>
+            </div> */}
+
             <RenderSalaryTable isLoading={props.salaryLoading} errMess={props.salaryErrMess} staffs={props.staffsSalary} />
         </div>
     );

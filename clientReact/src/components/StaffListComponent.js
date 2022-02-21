@@ -19,13 +19,11 @@ const minLength = (len) => (val) => val && (val.length >= len);
 const validDate = (val) => (new Date(val).getTime() < new Date().getTime()) && (parseInt(new Date(val).getFullYear()) > 1900);
 const validPositive = (val) => (val >= 0) && !isNaN(val);
 
-
 function RenderStaffList({ staffs, isLoading, errMess }) {
-
     const _staffs = staffs.map((staff) => {
         return (
             <div key={staff.id} className="col-6 col-md-4 col-lg-2 p-2">
-                <Link to={`/staff/${staff.id}`}>
+                <Link to={`/staffs/${staff._id}`}>
                     <FadeTransform
                         in
                         transformProps={{
@@ -39,15 +37,14 @@ function RenderStaffList({ staffs, isLoading, errMess }) {
                 </Link>
             </div>
         );
-
     })
+
 
     if (isLoading) {
         return (
             <div className="row pt-4" >
                 <Loading />
             </div>
-
         )
     }
     else if (errMess) {
@@ -58,7 +55,6 @@ function RenderStaffList({ staffs, isLoading, errMess }) {
                     <Alert color="danger">
                         {errMess}
                     </Alert>
-
                 </div>
             </div>
 
@@ -97,7 +93,6 @@ const StaffList = (props) => {
         setSearchInput(search.current.value)
         event.preventDefault()
         search.current.value = ""
-
     }
 
 
@@ -113,59 +108,36 @@ const StaffList = (props) => {
     // Xử lý khi submit form
     const handleSubmit = (values) => {
 
-        // Xử lý dữ liệu khi user select department, _dpm lưu giá trị của department của staff mới
-        let _dpm = '';
-        switch (values.department) {
-            case 'sale':
-                _dpm = 'Dept01'
-                break;
-            case 'hr':
-                _dpm = 'Dept02'
-                break;
-            case 'marketing':
-                _dpm = 'Dept03'
-                break;
-            case 'it':
-                _dpm = 'Dept04'
-                break;
-            case 'finance':
-                _dpm = 'Dept05'
-                break;
-
-            default:
-                break;
-        }
-
-        const salary = parseInt((values.salaryScale * 3000000) + (values.overTime * 200000));
-        console.log(salary)
         // Dựa vào values của form gửi tới để tạo ra object staff mới
+        
         const newStaff = {
-
             name: values.name,
             doB: new Date(values.doB).toISOString(),
             salaryScale: parseInt(values.salaryScale),
             startDate: new Date(values.startDate).toISOString(),
-            departmentId: _dpm,
+            department: values.department,
             annualLeave: parseInt(values.annualLeave),
-            overTime: parseInt(values.overTime),
+            //overTime: parseInt(values.overTime),
             image: '/asset/images/alberto.png',
-            salary: salary
+            //salary: salary
 
         };
-        // Truyền staff mới vào dismatch để chạy action bên reducer
+        
+        // Truyền staff mới vào dispatch để chạy action bên reducer
         props.postStaff(newStaff)
+
         // console.log(props.addStaff)
 
     }
 
     return (
         <div style={{ padding: '3vw' }}>
-
             <div className='row pt-3'>
                 <div className="col-12 col-md-6 col-lg-4 mr-auto">
                     <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{' '}Thêm nhân viên</Button>
                 </div>
-
+                
+                {/* Search form */}
                 <div className='col-12 col-md-6 col-lg-4 ml-auto p-3' >
                     <Form onSubmit={handleSearch}>
                         <FormGroup row>
@@ -184,6 +156,7 @@ const StaffList = (props) => {
                     </Form>
                 </div>
 
+                {/* Modal thêm nhân viên */}
                 <Modal isOpen={modal} toggle={toggle} className="modal-lg">
                     <ModalHeader className='modal-header' toggle={toggle}> <strong>Thêm nhân viên mới </strong></ModalHeader>
                     <ModalBody>
@@ -272,14 +245,13 @@ const StaffList = (props) => {
                                     <Row className='form-group'>
                                         <Label md={3} className='font-weight-bold' htmlFor='department'>Phòng ban</Label>
                                         <Col md={9}>
-                                            <Control.select model='.department' defaultValue='sale' className='form-control' validators={{ required }}>
-                                                <option value='sale'>Sale</option>
-                                                <option value='hr'>HR</option>
-                                                <option value='marketing'>Marketing</option>
-                                                <option value='it'>IT</option>
-                                                <option value='finance'>Finance</option>
+                                            <Control.select model='.department' defaultValue='Sale' className='form-control' validators={{ required }}>
+                                                <option value='Sale'>Sale</option>
+                                                <option value='HR'>HR</option>
+                                                <option value='Marketing'>Marketing</option>
+                                                <option value='IT'>IT</option>
+                                                <option value='Finance'>Finance</option>
                                             </Control.select>
-
                                         </Col>
                                         <Errors
                                             className='text-danger'
@@ -305,7 +277,6 @@ const StaffList = (props) => {
                                                     required,
                                                     validPositive
                                                 }}
-
                                             />
                                         </Col>
                                         <Errors
@@ -346,7 +317,7 @@ const StaffList = (props) => {
                                         />
                                     </Row>
                                 </Fade>
-                                <Fade in>
+                                {/* <Fade in>
                                     <Row className='form-group'>
                                         <Label htmlFor="overTime" className='font-weight-bold' md={3}>Ngày làm thêm giờ</Label>
                                         <Col md={9}>
@@ -370,7 +341,7 @@ const StaffList = (props) => {
                                             }}
                                         />
                                     </Row>
-                                </Fade>
+                                </Fade> */}
                                 <Fade in>
                                     <FormGroup row>
                                         <Col md={{ size: 9, offset: 3 }}>
@@ -386,19 +357,23 @@ const StaffList = (props) => {
 
                 </Modal>
             </div>
+            
+            {/* Alert khi thêm nhân viên thành công. */}
             <div id='success-add-staff' style={{ display: 'none' }} className='row pt-3'>
                 <Alert color="success">
                     Thêm nhân viên thành công.
                 </Alert>
             </div>
-
+            
+            {/* Title danh sách nhân viên. */}
             <div className="row pt-5" >
                 <div className='col-12'>
                     <h3 className='text-center font-weight-bold'>DANH SÁCH NHÂN VIÊN</h3>
                     <hr />
                 </div>
             </div>
-
+            
+            {/* Danh sách nhân viên */}
             <RenderStaffList staffs={newStaffs} isLoading={props.staffsLoading} errMess={props.staffsErrMess} />
         </div>
 

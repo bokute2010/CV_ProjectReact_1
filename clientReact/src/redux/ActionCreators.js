@@ -1,11 +1,12 @@
 import * as ActionTypes from './ActionTypes';
-import { baseURL } from '../shared/baseURL'
+import { baseURL } from '../shared/baseURL';
+import axios from 'axios';
 
 
 export const updateStaff = (staff) => dispatch => {
     dispatch(staffsLoading())
     return fetch(baseURL + 'staffs', {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -40,32 +41,54 @@ export const deleteStaff = (staffId) => dispatch => {
 
 export const postStaff = (staff) => dispatch => {
     dispatch(staffsLoading())
-    return fetch(baseURL + 'staffs', {
-        method: "POST",
-        body: JSON.stringify(staff),
-        headers: {
-            'Content-type': 'application/json'
-        },
-        credentials: 'same-origin'
 
-    })
+    return axios.post(baseURL + 'staffs', staff)
         .then(response => {
-            if (response.ok) {
+            if (response.status === 200) {
+                //console.log(response)
                 return response;
             } else {
                 var error = new Error('Error ' + response.status + ': ' + response.statusText);
                 error.response = response;
                 throw error;
             }
+            
         },
             error => {
                 var errMess = new Error(error.message);
                 throw errMess;
             })
 
-        .then(response => response.json())
+        .then(response => response.data)
         .then(staff => dispatch(addStaff(staff)))
         .catch(error => dispatch(staffsFailed(error.message)))
+
+    // return fetch(baseURL + 'staffs', {
+    //     method: "POST",
+    //     headers: {
+    //         'Content-type': 'application/json'
+    //     },
+    //     body: JSON.stringify(staff),
+    //     credentials: 'same-origin'
+    // })
+    //     .then(response => {
+    //         if (response.ok) {
+    //             // console.log(response)
+    //             return response;
+    //         } else {
+    //             var error = new Error('Error ' + response.status + ': ' + response.statusText);
+    //             error.response = response;
+    //             throw error;
+    //         }
+    //     },
+    //         error => {
+    //             var errMess = new Error(error.message);
+    //             throw errMess;
+    //         })
+
+    //     .then(response => response.json())
+    //     .then(staff => dispatch(addStaff(staff)))
+    //     .catch(error => dispatch(staffsFailed(error.message)))
 
 }
 
@@ -145,7 +168,7 @@ export const departmentsFailed = (errMess) => ({
 
 export const fetchStaffsSalary = () => dispatch => {
     dispatch(salaryLoading());
-    return fetch(baseURL + 'staffsSalary')
+    return fetch(baseURL + 'staffs')
         .then(response => {
             if (response.ok) {
                 return response;

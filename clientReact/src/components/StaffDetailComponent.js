@@ -28,58 +28,24 @@ function RenderStaff({ staff, department, history, deleteStaff, updateStaff, sta
     }
 
     const handleDelete = (staff) => {
-
-
-        deleteStaff(staff.id)
+        deleteStaff(staff._id)
         history.push('/');
-
-
     }
 
-    // Xử lý khi submit form
+    // Xử lý khi submit Update
     const handleSubmit = (values) => {
-
-        // Xử lý dữ liệu khi user select department, _dpm lưu giá trị của department của staff mới
-        let _dpm = '';
-        switch (values.department) {
-            case 'Sale':
-                _dpm = 'Dept01'
-                break;
-            case 'HR':
-                _dpm = 'Dept02'
-                break;
-            case 'Marketing':
-                _dpm = 'Dept03'
-                break;
-            case 'IT':
-                _dpm = 'Dept04'
-                break;
-            case 'Finance':
-                _dpm = 'Dept05'
-                break;
-
-            default:
-                break;
-        }
-
-        const salary = parseInt((values.salaryScale * 3000000) + (values.overTime * 200000));
-
         // Dựa vào values của form gửi tới để tạo ra object staff mới
         const newStaff = {
-            id: staff.id,
+            id: staff._id,
             name: values.name,
             doB: new Date(values.doB).toISOString(),
             salaryScale: values.salaryScale,
             startDate: new Date(values.startDate).toISOString(),
-            departmentId: _dpm,
+            department: values.department,
             annualLeave: values.annualLeave,
-            overTime: values.overTime,
-            image: '/asset/images/alberto.png',
-            salary: salary
-
+            image: '/asset/images/alberto.png'
         };
         updateStaff(newStaff)
-        // console.log(newStaff)
     }
 
     if (staffsIsLoading || departmentsIsLoading) {
@@ -160,13 +126,13 @@ function RenderStaff({ staff, department, history, deleteStaff, updateStaff, sta
 
                                                 </tr>
                                             </Fade>
-                                            <Fade in>
+                                            {/* <Fade in>
                                                 <tr>
                                                     <th scope="row">Ngày làm thêm giờ</th>
                                                     <td>{staff.overTime}</td>
 
                                                 </tr>
-                                            </Fade>
+                                            </Fade> */}
                                         </Stagger>
                                     </tbody>
                                 </Table>
@@ -358,7 +324,7 @@ function RenderStaff({ staff, department, history, deleteStaff, updateStaff, sta
                                         />
                                     </Row>
                                 </Fade>
-                                <Fade in>
+                                {/* <Fade in>
                                     <Row className='form-group'>
                                         <Label htmlFor="overTime" className='font-weight-bold' md={3}>Ngày làm thêm giờ</Label>
                                         <Col md={9}>
@@ -383,7 +349,7 @@ function RenderStaff({ staff, department, history, deleteStaff, updateStaff, sta
                                             }}
                                         />
                                     </Row>
-                                </Fade>
+                                </Fade> */}
                                 <Fade in>
                                     <FormGroup row>
                                         <Col md={{ size: 9, offset: 3 }}>
@@ -444,7 +410,7 @@ const StaffDetail = (props) => {
                     history={history}
                     deleteStaff={props.deleteStaff}
                     staff={props.staff}
-                    department={props.departments.find((department) => department.id === props.staff.departmentId)}
+                    department={props.departments.find((department) => department._id === props.staff.departmentId)}
                 />
             </div>
 
