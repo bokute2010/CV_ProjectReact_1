@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Icon department delete */
+.fa-trash{
+  position: absolute;
+  right: 3%;
+}
