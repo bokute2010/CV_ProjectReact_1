@@ -10,10 +10,15 @@ import { FadeTransform, Fade, Stagger } from 'react-animation-components'
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { Loading } from "./LoadingComponent";
 import SalaryResults from "./ResulfSearchSalary";
+import dateFormat from "dateformat";
 
 const required = (val) => val && val.length;
 
-function RenderSearchForm({staffs}) {
+function RenderSearchForm({ staffs }) {
+    //React Hook model
+    const [modal, setModal] = useState(false);
+    const toggle = () => setModal(!modal);
+
     //Select staffs value form.
     const staffSelect = staffs.map(staff => {
         return (
@@ -27,7 +32,7 @@ function RenderSearchForm({staffs}) {
         months.push(i)
     }
     const monthSelect = months.map(month => {
-        if (month == 1){
+        if (month == 1) {
             return (
                 <option selected value={month}>{month}</option>
             )
@@ -39,67 +44,79 @@ function RenderSearchForm({staffs}) {
 
     const histoty = useHistory();
     const handleSubmit = (values) => {
-        //console.log(values);
         histoty.push(`/salary/${values.staffId}/${values.month}`);
     }
 
     return (
-        <div style={{padding: '2vw 15vw 0 15vw'}}>
-            <LocalForm onSubmit={(values) => handleSubmit(values)}>
-                <Stagger in>
-                    <Fade in>
-                        <Row className='form-group'>
-                            <Label md={12} className='font-weight-bold' htmlFor='staffId'>Nhân viên</Label>
-                            <Col md={12}>
-                                <Control.select model='.staffId' className='form-control' validators={{ required }}>
-                                    {staffSelect}
-                                </Control.select>
-                            </Col>
-                            <Errors
-                                className='text-danger'
-                                model='.staffId'
-                                show='touched'
-                                messages={{
-                                    required: 'Chưa chọn nhân viên!',
-                                }}
-                            />
-                        </Row>
-                    </Fade>
-                    
-                    
-
-                    <Fade in>
-                        <Row className='form-group'>
-                            <Label md={12} className='font-weight-bold' htmlFor='month'>Tháng</Label>
-                            <Col md={12}>
-                                <Control.select model='.month' className='form-control' validators={{ required }}>
-                                    {monthSelect}
-                                </Control.select>
-                            </Col>
-                            <Errors
-                                className='text-danger'
-                                model='.month'
-                                show='touched'
-                                messages={{
-                                    required: 'Chưa chọn tháng!',
-                                }}
-                            />
-                        </Row>
-                    </Fade>
+        <>
+            <div style={{ padding: '2vw 3vw 0 3vw' }}>
+                {/* <div className='row pt-3'> */}
+                    <div className="col-6 col-md-6 col-lg-4 mr-auto">
+                        <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{'  '}Tìm nâng cao</Button>
+                    </div>
+                {/* </div> */}
+            </div>
+            <Modal isOpen={modal} toggle={toggle} className="modal-lg">
+                <ModalHeader className='modal-header' toggle={toggle}> <strong>Tìm nâng cao</strong></ModalHeader>
+                <ModalBody>
+                    <LocalForm onSubmit={(values) => handleSubmit(values)}>
+                        <Stagger in>
+                            <Fade in>
+                                <Row className='form-group'>
+                                    <Label md={12} className='font-weight-bold' htmlFor='staffId'>Nhân viên</Label>
+                                    <Col md={12}>
+                                        <Control.select model='.staffId' className='form-control' validators={{ required }}>
+                                            {staffSelect}
+                                        </Control.select>
+                                    </Col>
+                                    <Errors
+                                        className='text-danger'
+                                        model='.staffId'
+                                        show='touched'
+                                        messages={{
+                                            required: 'Chưa chọn nhân viên!',
+                                        }}
+                                    />
+                                </Row>
+                            </Fade>
 
 
-                    <Fade in>
-                        <FormGroup row>
-                            <Col md={{ size: 9, offset: 3 }}>
-                                <Button block size='lg' type="submit" color="info">
-                                    Kiểm tra lương
-                                </Button>
-                            </Col>
-                        </FormGroup>
-                    </Fade>
-                </Stagger>
-            </LocalForm>
-        </div>
+
+                            <Fade in>
+                                <Row className='form-group'>
+                                    <Label md={12} className='font-weight-bold' htmlFor='month'>Tháng</Label>
+                                    <Col md={12}>
+                                        <Control.select model='.month' className='form-control' validators={{ required }}>
+                                            {monthSelect}
+                                        </Control.select>
+                                    </Col>
+                                    <Errors
+                                        className='text-danger'
+                                        model='.month'
+                                        show='touched'
+                                        messages={{
+                                            required: 'Chưa chọn tháng!',
+                                        }}
+                                    />
+                                </Row>
+                            </Fade>
+
+
+                            <Fade in>
+                                <FormGroup row>
+                                    <Col md={{ size: 9, offset: 3 }}>
+                                        <Button block size='lg' type="submit" color="info">
+                                            Kiểm tra lương
+                                        </Button>
+                                    </Col>
+                                </FormGroup>
+                            </Fade>
+                        </Stagger>
+                    </LocalForm>
+                </ModalBody>
+            </Modal>
+        </>                           
+        
     )
 }
 
@@ -139,11 +156,11 @@ function RenderAddSalary({ staffs, createSalary }) {
     return (
         <>
             <div style={{ padding: '2vw 3vw 0 3vw' }}>
-                <div className='row pt-3'>
-                    <div className="col-12 col-md-6 col-lg-4 mr-auto">
-                        <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{'  '}Add Salary</Button>
+                {/* <div className='row pt-3'> */}
+                    <div className="col-6 col-md-6 col-lg-4 mr-auto">
+                        <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{'  '}Cập nhật lương</Button>
                     </div>
-                </div>
+                {/* </div> */}
             </div>
             <Modal isOpen={modal} toggle={toggle} className="modal-lg">
                 <ModalHeader className='modal-header' toggle={toggle}> <strong>Tạo bảng lương</strong></ModalHeader>
@@ -234,6 +251,7 @@ function RenderAddSalary({ staffs, createSalary }) {
 function RenderSalaryTable({ staffs, isLoading, errMess }) {
 
     const employees = staffs.map((staff) => {
+
         return (
             <div key={staff.id} className="col-12 col-sm-6 col-md-4  p-4">
                 <Card>
@@ -242,31 +260,21 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
                         <Table borderless hover>
                             <tbody>
                                 <tr>
-                                    <th scope="row">Mã nhân viên</th>
-                                    <td>{staff._id}</td>
+                                    <th scope="row">Ngày vào công ty</th>
+                                    <td>{dateFormat(staff.startDate, "dd-mm-yyyy")}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Hệ số lương</th>
                                     <td>{staff.salaryScale}</td>
                                 </tr>
-                                {/* <tr>
-                                    <th scope="row">Giờ làm thêm</th>
-                                    <td>{staff.overTime}</td>
-                                </tr> */}
                             </tbody>
                         </Table>
                     </CardBody>
                     <CardFooter>
-                        <Table borderless>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Lương</th>
-                                    <td>
-                                        <i className="fa fa-money" aria-hidden="true"></i> {(staff.salaryScale * 3000000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {<sup>đ</sup>}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </Table>
+                    <Link to={`/salary/${staff._id}`}>
+                        <Button color="info">Xem lương</Button>
+                    </Link>
+                    
                     </CardFooter>
                 </Card>
             </div>
@@ -326,7 +334,7 @@ const Salary = (props) => {
 
             <RenderAddSalary createSalary={props.createSalary} staffs={props.staffs} />
 
-            <RenderSearchForm staffs={props.staffs}/>
+            <RenderSearchForm staffs={props.staffs} />
 
             <RenderSalaryTable isLoading={props.salaryLoading} errMess={props.salaryErrMess} staffs={props.staffs} />
 

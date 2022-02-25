@@ -75,13 +75,21 @@ class Main extends Component {
       );
     }
 
-    const SalaryWithStaffId = ({match}) =>{
+    const SalaryWithStaffIdMonth = ({match}) =>{
       const salariesFiltered = this.props.salaries.salaries.filter((salary)=> salary.staffId === match.params.staffId && salary.month === parseInt(match.params.month));
       const staff = this.props.staffs.staffs.find((staff)=> staff._id === match.params.staffId);
       return (
-        <SalaryResults salaries={salariesFiltered} salaryScale = {staff.salaryScale}/>   
+        <SalaryResults salaries={salariesFiltered} staff = {staff} month={true}/>   
       )
         
+    }
+
+    const SalaryWithStaffId = ({match}) =>{
+      const salariesFiltered = this.props.salaries.salaries.filter((salary)=> salary.staffId === match.params.staffId);
+      const staff = this.props.staffs.staffs.find((staff)=> staff._id === match.params.staffId);
+      return (
+        <SalaryResults salaries={salariesFiltered} staff = {staff} month={false}/>   
+      )     
     }
 
     return (
@@ -92,7 +100,9 @@ class Main extends Component {
             <Switch location={this.props.location}>
               <Route exact path='/staffs' component={() => <StaffList postStaff={this.props.postStaff} staffsLoading={this.props.staffs.isLoading} staffsErrMess={this.props.staffs.errMess} />} />
               <Route exact path='/salary' component={() => <Salary createSalary = {this.props.createSalary} staffs={this.props.staffs.staffs} salaryLoading={this.props.salaries.isLoading} salaryErrMess={this.props.salaries.errMess} />} />
-              <Route path ='/salary/:staffId/:month' component={SalaryWithStaffId}/>
+              <Route exact path ='/salary/:staffId' component={SalaryWithStaffId}/>
+              <Route path ='/salary/:staffId/:month' component={SalaryWithStaffIdMonth}/>
+              
               <Route path='/staffs/:staffId' component={StaffWithId} />
               <Route exact path='/department' component={() => <DepartmentList deleteDepartment={this.props.deleteDepartment} createDepartment={this.props.createDepartment} staffs={this.props.staffs} departmentsLoading={this.props.departments.isLoading} departmentsErrMess={this.props.departments.errMess} departments={this.props.departments.departments} />} />
               <Route path='/department/:departmentId' component={DepartmentWithId} />
