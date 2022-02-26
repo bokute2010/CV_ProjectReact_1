@@ -11,7 +11,7 @@ import SalaryResults from './ResulfSearchSalary';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { postStaff, fetchStaffs, deleteStaff, updateStaff } from '../redux/actionCreators/ActionCreators';
-import { getSalary, createSalary } from '../redux/actionCreators/SalaryActions';
+import { getSalary, createSalary, deleteSalary } from '../redux/actionCreators/SalaryActions';
 import { fetchDepartments, createDepartment, deleteDepartment } from "../redux/actionCreators/DepartmentActions";
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
@@ -35,6 +35,7 @@ const mapDispatchToProps = dispatch => ({
 
   getSalary: () => {dispatch(getSalary())},
   createSalary: (salaryInfo) => { dispatch(createSalary(salaryInfo)) },
+  deleteSalary: (salaryId) => {dispatch(deleteSalary(salaryId))}
 })
 
 class Main extends Component {
@@ -79,7 +80,7 @@ class Main extends Component {
       const salariesFiltered = this.props.salaries.salaries.filter((salary)=> salary.staffId === match.params.staffId && salary.month === parseInt(match.params.month));
       const staff = this.props.staffs.staffs.find((staff)=> staff._id === match.params.staffId);
       return (
-        <SalaryResults salaries={salariesFiltered} staff = {staff} month={true}/>   
+        <SalaryResults deleteSalary={this.props.deleteSalary} salaries={salariesFiltered} staff = {staff} month={true}/>   
       )
         
     }
@@ -88,7 +89,16 @@ class Main extends Component {
       const salariesFiltered = this.props.salaries.salaries.filter((salary)=> salary.staffId === match.params.staffId);
       const staff = this.props.staffs.staffs.find((staff)=> staff._id === match.params.staffId);
       return (
-        <SalaryResults salaries={salariesFiltered} staff = {staff} month={false}/>   
+        <SalaryResults 
+          deleteSalary={this.props.deleteSalary} 
+          salaries={this.props.salaries.salaries.filter((salary)=> salary.staffId === match.params.staffId)} 
+          staff = {this.props.staffs.staffs.find((staff)=> staff._id === match.params.staffId)} 
+          staffsLoading = {this.props.staffs.isLoading}
+          staffsErrMess = {this.props.staffs.errMess}
+          month={false}
+          salaryLoading={this.props.salaries.isLoading} 
+          salaryErrMess={this.props.salaries.errMess}
+        />   
       )     
     }
 

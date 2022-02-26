@@ -82,7 +82,6 @@ function RenderDeparment({ deleteDepartment, staffs, departments, isLoading, err
             deleteDepartment(department._id)
         }
 
-
         return (
             <div key={department.id} className="col-12 col-sm-6 col-lg-4 p-4">
                 <Card>

@@ -249,9 +249,7 @@ function RenderAddSalary({ staffs, createSalary }) {
 
 //@Function render salary table
 function RenderSalaryTable({ staffs, isLoading, errMess }) {
-
     const employees = staffs.map((staff) => {
-
         return (
             <div key={staff.id} className="col-12 col-sm-6 col-md-4  p-4">
                 <Card>
@@ -291,7 +289,6 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
         )
     }
     else if (errMess) {
-        // console.log(JSON.stringify(errMess))
         return (
             <div className="row pt-4" >
                 <div className="col-12 ">

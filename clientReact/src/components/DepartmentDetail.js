@@ -46,7 +46,6 @@ const DepartmentDetail = (props) => {
                 </div>
                 <RenderStaffs staffs={props.staffs} />
             </div>
-
         );
     }
 }

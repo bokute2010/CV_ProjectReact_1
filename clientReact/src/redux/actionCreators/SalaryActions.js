@@ -2,6 +2,28 @@ import * as ActionTypes from '../ActionTypes';
 import { baseURL } from '../../shared/baseURL';
 import axios from 'axios';
 
+export const deleteSalary = (salaryId) => dispatch => {
+    dispatch(salaryLoading());
+
+    return axios.delete(baseURL + `salaries/${salaryId}`)
+        .then(response =>{
+            if(response.status == 200){
+                return response;
+            }else{
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            
+            
+        }}, error => {
+            var errMess = new Error(error.message);
+            throw errMess;
+        })
+        .then(response => response.data)
+        .then(salaries => dispatch(loadSalary(salaries)))
+        .catch(error => dispatch(salaryFailed(error.message)));
+}       
+
 export const createSalary = (salaryInfo) => dispatch => {
     dispatch(salaryLoading());
     return axios.post(baseURL + 'salaries', salaryInfo)
@@ -20,7 +42,7 @@ export const createSalary = (salaryInfo) => dispatch => {
             })
 
         .then(response => response.data)
-        .then(staffsSalary => dispatch(addStaffsSalary(staffsSalary)))
+        .then(staffsSalary => dispatch(loadSalary(staffsSalary)))
         .catch(error => dispatch(salaryFailed(error.message)))
 }
 
