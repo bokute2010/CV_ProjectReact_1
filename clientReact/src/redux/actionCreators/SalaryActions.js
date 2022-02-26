@@ -7,7 +7,7 @@ export const deleteSalary = (salaryId) => dispatch => {
 
     return axios.delete(baseURL + `salaries/${salaryId}`)
         .then(response =>{
-            if(response.status == 200){
+            if(response.status === 200){
                 return response;
             }else{
                 var error = new Error('Error ' + response.status + ': ' + response.statusText);
@@ -28,7 +28,7 @@ export const createSalary = (salaryInfo) => dispatch => {
     dispatch(salaryLoading());
     return axios.post(baseURL + 'salaries', salaryInfo)
         .then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 return response;
             } else {
                 var error = new Error('Error ' + response.status + ': ' + response.statusText);
@@ -51,7 +51,7 @@ export const getSalary = () => dispatch => {
     return (
         axios.get(baseURL + "salaries")
             .then(response => {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     return response;
                 } else {
                     var error = new Error('Error ' + response.status + ': ' + response.statusText);

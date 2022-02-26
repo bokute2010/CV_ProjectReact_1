@@ -375,12 +375,7 @@ const StaffDetail = (props) => {
 
 
     if (props.staff === undefined) {
-        // setTimeout(() => {
 
-        //     history.push('/none-exist-staff')
-
-
-        // }, 10000);
         return (
             <div className='container pt-3'>
                 <div className="row pt-4" >
@@ -404,7 +399,6 @@ const StaffDetail = (props) => {
 
                     departmentsIsLoading={props.departmentsLoading}
                     departmentsErrMess={props.departmentsErrMess}
-
 
                     updateStaff={props.updateStaff}
                     history={history}

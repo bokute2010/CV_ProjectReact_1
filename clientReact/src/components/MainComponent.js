@@ -109,7 +109,18 @@ class Main extends Component {
           <CSSTransition key={this.props.location.key} classNames='page' timeout={500}>
             <Switch location={this.props.location}>
               <Route exact path='/staffs' component={() => <StaffList postStaff={this.props.postStaff} staffsLoading={this.props.staffs.isLoading} staffsErrMess={this.props.staffs.errMess} />} />
-              <Route exact path='/salary' component={() => <Salary createSalary = {this.props.createSalary} staffs={this.props.staffs.staffs} salaryLoading={this.props.salaries.isLoading} salaryErrMess={this.props.salaries.errMess} />} />
+              <Route exact path='/salary' 
+                component={
+                  () => <Salary 
+                    createSalary = {this.props.createSalary} 
+                    staffs={this.props.staffs.staffs}
+                    staffsLoading = {this.props.staffs.isLoading}
+                    staffsErrMess = {this.props.staffs.errMess}
+                    />
+                  
+                } 
+                  
+                />
               <Route exact path ='/salary/:staffId' component={SalaryWithStaffId}/>
               <Route path ='/salary/:staffId/:month' component={SalaryWithStaffIdMonth}/>
               

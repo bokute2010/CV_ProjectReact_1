@@ -21,7 +21,6 @@ const validPositive = (val) => (val >= 0) && !isNaN(val);
 
 function CreateStaff({ departments, postStaff }) {
 
-
     const _departments = departments.map(department => {
         return (
             <option value={department.name}>{department.name}</option>
@@ -47,7 +46,7 @@ function CreateStaff({ departments, postStaff }) {
             image: '/asset/images/alberto.png',
             //salary: salary
         };
-        console.log(newStaff)
+
         // Truyền staff mới vào dispatch để chạy action bên reducer
         postStaff(newStaff)
     }
@@ -143,7 +142,7 @@ function CreateStaff({ departments, postStaff }) {
                                 <Row className='form-group'>
                                     <Label md={3} className='font-weight-bold' htmlFor='department'>Phòng ban</Label>
                                     <Col md={9}>
-                                        <Control.select model='.department' className='form-control' validators={{ required }}>
+                                        <Control.select model='.department' className='form-control' defaultValue={"IT"} validators={{ required }}>
                                             {_departments}
                                         </Control.select>
                                     </Col>
@@ -208,31 +207,7 @@ function CreateStaff({ departments, postStaff }) {
                                     />
                                 </Row>
                             </Fade>
-                            {/* <Fade in>
-                                    <Row className='form-group'>
-                                        <Label htmlFor="overTime" className='font-weight-bold' md={3}>Ngày làm thêm giờ</Label>
-                                        <Col md={9}>
-                                            <Control.text model=".overTime"
-                                                className='form-control'
-                                                name='overTime' id='overTime'
-                                                defaultValue='0'
-                                                validators={{
-                                                    required,
-                                                    validPositive
-                                                }}
-                                            />
-                                        </Col>
-                                        <Errors
-                                            className='text-danger'
-                                            model='.overTime'
-                                            show='touched'
-                                            messages={{
-                                                required: 'Không được bỏ trống!',
-                                                validPositive: 'Giá trị không hợp lệ!'
-                                            }}
-                                        />
-                                    </Row>
-                                </Fade> */}
+                           
                             <Fade in>
                                 <FormGroup row>
                                     <Col md={{ size: 9, offset: 3 }}>

@@ -65,7 +65,7 @@ function RenderSearchForm({ staffs }) {
                                 <Row className='form-group'>
                                     <Label md={12} className='font-weight-bold' htmlFor='staffId'>Nhân viên</Label>
                                     <Col md={12}>
-                                        <Control.select model='.staffId' className='form-control' validators={{ required }}>
+                                        <Control.select model='.staffId' defaultValue={staffs[0]._id} className='form-control' validators={{ required }}>
                                             {staffSelect}
                                         </Control.select>
                                     </Col>
@@ -86,7 +86,7 @@ function RenderSearchForm({ staffs }) {
                                 <Row className='form-group'>
                                     <Label md={12} className='font-weight-bold' htmlFor='month'>Tháng</Label>
                                     <Col md={12}>
-                                        <Control.select model='.month' className='form-control' validators={{ required }}>
+                                        <Control.select model='.month' defaultValue={months[0].toString()} className='form-control' validators={{ required }}>
                                             {monthSelect}
                                         </Control.select>
                                     </Col>
@@ -120,7 +120,7 @@ function RenderSearchForm({ staffs }) {
     )
 }
 
-function RenderAddSalary({ staffs, createSalary }) {
+function RenderAddSalary({ staffs, createSalary, staffsErrMess, staffsLoading }) {
     //React Hook model
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -137,6 +137,7 @@ function RenderAddSalary({ staffs, createSalary }) {
     for (let i = 1; i <= 12; i++) {
         months.push(i)
     }
+
     const monthSelect = months.map(month => {
         return (
             <option value={month}>{month}</option>
@@ -152,103 +153,125 @@ function RenderAddSalary({ staffs, createSalary }) {
         }
         createSalary(newSalary)
     };
-
-    return (
-        <>
-            <div style={{ padding: '2vw 3vw 0 3vw' }}>
-                {/* <div className='row pt-3'> */}
-                    <div className="col-6 col-md-6 col-lg-4 mr-auto">
-                        <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{'  '}Cập nhật lương</Button>
-                    </div>
-                {/* </div> */}
+    if (staffsLoading) {
+        return (
+            <div className="row pt-4" >
+                <Loading />
             </div>
-            <Modal isOpen={modal} toggle={toggle} className="modal-lg">
-                <ModalHeader className='modal-header' toggle={toggle}> <strong>Tạo bảng lương</strong></ModalHeader>
-                <ModalBody>
-                    <LocalForm onSubmit={(values) => handleSubmit(values)}>
-                        <Stagger in>
-                            <Fade in>
-                                <Row className='form-group'>
-                                    <Label md={3} className='font-weight-bold' htmlFor='staffId'>Nhân viên</Label>
-                                    <Col md={9}>
-                                        <Control.select model='.staffId' className='form-control' validators={{ required }}>
-                                            {staffSelect}
-                                        </Control.select>
-                                    </Col>
-                                    <Errors
-                                        className='text-danger'
-                                        model='.staffId'
-                                        show='touched'
-                                        messages={{
-                                            required: 'Chưa chọn nhân viên!',
-                                        }}
-                                    />
-                                </Row>
-                            </Fade>
 
-                            <Fade in>
-                                <Row className='form-group'>
-                                    <Label md={3} className='font-weight-bold' htmlFor='month'>Tháng</Label>
-                                    <Col md={9}>
-                                        <Control.select model='.month' className='form-control' validators={{ required }}>
-                                            {monthSelect}
-                                        </Control.select>
-                                    </Col>
-                                    <Errors
-                                        className='text-danger'
-                                        model='.month'
-                                        show='touched'
-                                        messages={{
-                                            required: 'Chưa chọn tháng!',
-                                        }}
-                                    />
-                                </Row>
-                            </Fade>
+        )
+    }
+    else if (staffsErrMess) {
+        return (
+            <div className="row pt-4" >
+                <div className="col-12 ">
+                    <Alert color="danger">
+                        {staffsErrMess}
+                    </Alert>
 
-                            <Fade in>
-                                <Row className='form-group'>
-                                    <Label htmlFor="salaryScale" className='font-weight-bold' md={3}>Ngày làm thêm giờ</Label>
-                                    <Col md={9}>
-                                        <Control.text model=".overTime"
-                                            name='overTime' id='overTime'
-                                            className='form-control'
-                                            defaultValue='0'
-                                            validators={{
-                                                required
+                </div>
+            </div>
+
+        );
+    }else{
+        return (
+            <>
+                <div style={{ padding: '2vw 3vw 0 3vw' }}>
+                    {/* <div className='row pt-3'> */}
+                        <div className="col-6 col-md-6 col-lg-4 mr-auto">
+                            <Button outline onClick={toggle} ><span className="fa fa-address-card-o fa-lg"></span>{'  '}Cập nhật lương</Button>
+                        </div>
+                    {/* </div> */}
+                </div>
+                <Modal isOpen={modal} toggle={toggle} className="modal-lg">
+                    <ModalHeader className='modal-header' toggle={toggle}> <strong>Tạo bảng lương</strong></ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => handleSubmit(values)}>
+                            <Stagger in>
+                                <Fade in>
+                                    <Row className='form-group'>
+                                        <Label md={3} className='font-weight-bold' htmlFor='staffId'>Nhân viên</Label>
+                                        <Col md={9}>
+                                            <Control.select model='.staffId' defaultValue={staffs[0]._id} className='form-control' validators={{ required }}>
+                                                {staffSelect}
+                                            </Control.select>
+                                        </Col>
+                                        <Errors
+                                            className='text-danger'
+                                            model='.staffId'
+                                            show='touched'
+                                            messages={{
+                                                required: 'Chưa chọn nhân viên!',
                                             }}
                                         />
-                                    </Col>
-                                    <Errors
-                                        className='text-danger'
-                                        model='.overTime'
-                                        show='touched'
-                                        messages={{
-                                            required: 'Không được bỏ trống!',
-                                            validPositive: 'Hệ số lương không hợp lệ!'
-                                        }}
-
-                                    />
-                                </Row>
-                            </Fade>
-                            <Fade in>
-                                <FormGroup row>
-                                    <Col md={{ size: 9, offset: 3 }}>
-                                        <Button block size='lg' type="submit" color="info">
-                                            Tạo mới
-                                        </Button>
-                                    </Col>
-                                </FormGroup>
-                            </Fade>
-                        </Stagger>
-                    </LocalForm>
-                </ModalBody>
-            </Modal>
-        </>
-    );
+                                    </Row>
+                                </Fade>
+    
+                                <Fade in>
+                                    <Row className='form-group'>
+                                        <Label md={3} className='font-weight-bold' htmlFor='month'>Tháng</Label>
+                                        <Col md={9}>
+                                            <Control.select model='.month' defaultValue={months[0].toString()} className='form-control' validators={{ required }}>
+                                                {monthSelect}
+                                            </Control.select>
+                                        </Col>
+                                        <Errors
+                                            className='text-danger'
+                                            model='.month'
+                                            show='touched'
+                                            messages={{
+                                                required: 'Chưa chọn tháng!',
+                                            }}
+                                        />
+                                    </Row>
+                                </Fade>
+    
+                                <Fade in>
+                                    <Row className='form-group'>
+                                        <Label htmlFor="salaryScale" className='font-weight-bold' md={3}>Ngày làm thêm giờ</Label>
+                                        <Col md={9}>
+                                            <Control.text model=".overTime"
+                                                name='overTime' id='overTime'
+                                                className='form-control'
+                                                defaultValue='0'
+                                                validators={{
+                                                    required
+                                                }}
+                                            />
+                                        </Col>
+                                        <Errors
+                                            className='text-danger'
+                                            model='.overTime'
+                                            show='touched'
+                                            messages={{
+                                                required: 'Không được bỏ trống!',
+                                                validPositive: 'Hệ số lương không hợp lệ!'
+                                            }}
+    
+                                        />
+                                    </Row>
+                                </Fade>
+                                <Fade in>
+                                    <FormGroup row>
+                                        <Col md={{ size: 9, offset: 3 }}>
+                                            <Button block size='lg' type="submit" color="info">
+                                                Tạo mới
+                                            </Button>
+                                        </Col>
+                                    </FormGroup>
+                                </Fade>
+                            </Stagger>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+            </>
+        );
+    }
+    
 }
 
 //@Function render salary table
-function RenderSalaryTable({ staffs, isLoading, errMess }) {
+function RenderSalaryTable({ staffs, staffsErrMess, staffsLoading }) {
     const employees = staffs.map((staff) => {
         return (
             <div key={staff.id} className="col-12 col-sm-6 col-md-4  p-4">
@@ -280,7 +303,7 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
 
     })
 
-    if (isLoading) {
+    if (staffsLoading) {
         return (
             <div className="row pt-4" >
                 <Loading />
@@ -288,12 +311,12 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
 
         )
     }
-    else if (errMess) {
+    else if (staffsErrMess) {
         return (
             <div className="row pt-4" >
                 <div className="col-12 ">
                     <Alert color="danger">
-                        {errMess}
+                        {staffsErrMess}
                     </Alert>
 
                 </div>
@@ -316,28 +339,37 @@ function RenderSalaryTable({ staffs, isLoading, errMess }) {
 
 }
 
-
 const Salary = (props) => {
-
-    return (
-
-        <div>
-            <div className="row" >
-                <Breadcrumb className='col-md-12' style={{ padding: '2vw 3vw 0 3vw' }}>
-                    <BreadcrumbItem><Link to='/'><b>Nhân viên</b></Link></BreadcrumbItem>
-                    <BreadcrumbItem active><b>Lương</b></BreadcrumbItem>
-                </Breadcrumb>
+    if(props.staffs === undefined || props.staffsLoading){
+        return (
+            <Loading />
+        )
+    }else{
+        return (
+            <div>
+                <div className="row" >
+                    <Breadcrumb className='col-md-12' style={{ padding: '2vw 3vw 0 3vw' }}>
+                        <BreadcrumbItem><Link to='/'><b>Nhân viên</b></Link></BreadcrumbItem>
+                        <BreadcrumbItem active><b>Lương</b></BreadcrumbItem>
+                    </Breadcrumb>
+                </div>
+    
+                <RenderAddSalary 
+                    createSalary={props.createSalary} 
+                    staffs={props.staffs} 
+                    staffsLoading={props.staffsLoading} 
+                    staffsErrMess={props.staffsErrMess}
+                />
+    
+                <RenderSearchForm staffs={props.staffs} />
+    
+                <RenderSalaryTable staffs={props.staffs} staffsLoading={props.staffsLoading} staffsErrMess={props.staffsErrMess} />
+    
+    
             </div>
-
-            <RenderAddSalary createSalary={props.createSalary} staffs={props.staffs} />
-
-            <RenderSearchForm staffs={props.staffs} />
-
-            <RenderSalaryTable isLoading={props.salaryLoading} errMess={props.salaryErrMess} staffs={props.staffs} />
-
-
-        </div>
-    );
+        );
+    }
+    
 
 }
 
